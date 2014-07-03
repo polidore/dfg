@@ -12,7 +12,7 @@ I want a config system that works like a programming language.  In fact, even as
 
 ## Example
 
-*** Base config ***
+** Base config **
 
 ```
 { 
@@ -23,7 +23,7 @@ I want a config system that works like a programming language.  In fact, even as
 }
 ```
 
-*** Override Fragment ***
+** Override Fragment **
 
 Notice, I'm not going to override the "isWeekend" field, but I could.
 ```
@@ -36,7 +36,7 @@ Notice, I'm not going to override the "isWeekend" field, but I could.
 }
 ```
 
-*** Override Scheme ***
+** Override Scheme **
 
 The order matters.  The overriding algorithm will give clientId a value of 1 (2^0) and isWeekend a value of 2 (2^1).  It will then start at the defaults and override fragments with increasing values. So, if you had a fragment with just clientId and another with just isWeekend, it would override isWeekend first then clientId giving clientId the last say unless you had a config fragment with both clientId AND isWeekend, which would get a value of 2^0 + 2^1 = 3.  The value of this gets more obvious when you have many different contexts for overriding a value.
 
@@ -52,7 +52,7 @@ dfg.addOverrideScheme('coffeeMachine',[
 ]);
 ```
 
-*** Usage ***
+** Usage **
 
 ```
 var defaults = dfg('coffeeMachine');
