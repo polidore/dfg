@@ -14,7 +14,7 @@ I want a config system that works like a programming language.  In fact, even as
 
 **Base config**
 
-```
+```javascript
 { 
   $type: 'coffeeMachine',
   startTime: '09:45:00',
