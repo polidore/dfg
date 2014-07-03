@@ -1,4 +1,4 @@
-# Do it with Configs!
+# Do it with ConFigs!
 
 I work with configurations a lot in applications I've built, and I find that the way most people do configurations don't fit what I'm trying to accomplish.  I have built this config system in a less formal way in a few applications, but I decided to make it a public project to benefit from a community if there is one for this type of work. 
 
