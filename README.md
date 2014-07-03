@@ -52,7 +52,7 @@ dfg.addOverrideScheme('coffeeMachine',[
 ]);
 ```
 
-** Usage **
+**Usage**
 
 ```javascript
 var defaults = dfg('coffeeMachine');
