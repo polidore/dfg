@@ -70,8 +70,8 @@ var userLevel = dfg('coffeeMachine',context);
 * The defaults are in a single JSON object lacking the `$override` field
 * Overrides are contained in _n_ JSON objects, each with a _unique_ (for a given `$type`) `$override` field
 * Overrides are not 'deep', so avoid nesting if you think you might want to override a single, nested field
-* There is a single `$override` context per `$type`
-* Override contexts have a schema that is as a list of keys with exponential, ascending order rankings
+* There is a single `$override` context schema per `$type`
+* Override contexts have a schema represented as a list of keys with exponential, ascending order rankings (bitmask-- more later)
 * At runtime, a user will request a configuration by providing the type (string) and an instance of the "context" which will be compared to overrides written to disk or a DB
 
 ### Overriding
@@ -87,7 +87,8 @@ Now, you might have a default price globally of $0.20 / kWh.
 ```javascript
 {
   $type: 'electricity',
-  $kwhRate: 0.2
+  $kwhRate: 0.2,
+  $ac: true //I will not override this, but it will still be present in all contexts in the example below
 }
 ```
 
@@ -117,13 +118,14 @@ OK, that's nice, but what about the rate for New York State?  Easy enough, right
 }
 ```
 
-Now, the overrider is going to have two matches here (after the defaults): the country-wide value of $0.12 / kWh and the state-level value of $0.19.  How does it know the order to match them in?  It's only natural that $0.19 would win, but how does it do it?  Like this: 
+Now, the overrider is going to have two matches here (after the defaults): the country-wide value of $0.12 / kWh and the state-level value of $0.19.  How does it know the order in which to match them?  It's only natural that $0.19 would win, but how does it do it?  Like this: 
 
 * Country is in element 0 of the context schema
 * State is in element 1 of the context schema
 * The defaults always get an override sum of 0
 * The country-only override has a sum of 1
 * The country+state override has a sum of 3
-* The overrider will create a new object by laying out in ascending order the values in the objects selected: defaults and both of our overrides
+* The overrider will create a new object by laying out in ascending order the values defined in the objects selected: defaults and both of our overrides
+* Overrides only need define the field they want to change, implicitly accepting the less specific value from an override or the defaults in the final object
 
 This gets more interesting as follows: an override with, e.g., country+state+county will always "lose" to a city override since `2^0+2^1+2^2 < 2^3`!
