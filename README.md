@@ -129,3 +129,18 @@ Now, the overrider is going to have two matches here (after the defaults): the c
 * Overrides only need define the field they want to change, implicitly accepting the less specific value from an override or the defaults in the final object
 
 This gets more interesting as follows: an override with, e.g., country+state+county will always "lose" to a city override since `2^0+2^1+2^2 < 2^3`!
+
+### Caching
+
+Given the complexity of this system of overrides, it's very important to have good caching.  The system will have two levels of caching, but before we define them, let me remind you how config composition works.  First, a context is created using application data-- DFG cannot help you make this fast, so please make it fast.  Then, DFG uses that context to search the potentially thousands of available overrides for a match.  This is slow, but there are very good caching opportunities here.  Then, slowest of all, DFG creates the final config object by overlaying the defaults with a series of sorted overrides.
+
+1. Primary Cache
+  * This is basically a map of context object -> final, override complete object.  This cache gets hit most of the time.
+  * You can make this faster by providing an optional `$hash` field in your context object, but DFG will create one for you if you don't provide it.
+1. Secondary Cache
+  * This is a bit tricker, but imagine our electricity example above-- we have only defined a few unique overrides, but the application will create a huge number of unique context objects as it goes about its business.  For example, if your application has need of the kwhRate for Albany, NY, you know that it's just going to get the state-level override.  DFG will still have to confirm that by searching for matches on its context object, but once it is done and the matches it has found are the same as the ones it previously used for New York, NY the secondary cache comes into play.  Now, these two context objects, each with a distinct `$hash` will share the same config object.
+  * This is an OK save in terms of CPU (don't have to override when this cache is hit), but it's a huge memory savings since it prevents the creation of many, many redundant config objects.
+
+#### Best Practices
+
+You should cache your context search key on some unique business object and provide a `$hash` to DFG, but you should not save copies of the config value because this will prevent on the fly config changes.  For example, if you change the value for NY to $0.20 / kWh, and then DFG is told to clear its caches, the next time you ask for NY's rate, you'll get the new value.  If you cache the configset in your application, you won't know about the change.
