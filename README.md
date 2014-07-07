@@ -76,12 +76,11 @@ var userLevel = dfg('coffeeMachine',context);
 
 ### Overriding
 
-Above, I mention "exponential, ascending order".  That's a mouthful!  It's pretty simple, though.  Imagine the following override context schema for electricity pricing: 
+Above, I mention "exponential, ascending order".  That's a mouthful!  It's pretty simple, though.  We're basically talking about a bitmask.  Imagine the following override context schema for electricity pricing: 
 
-0. Country
-0. State
-0. County
-0. City
+```
+ [Country, State, County, City] //0,1,2,3
+```
 
 Now, you might have a default price globally of $0.20 / kWh.  
 
@@ -92,7 +91,7 @@ Now, you might have a default price globally of $0.20 / kWh.
 }
 ```
 
-This isn't very useful, though.  You might want to set the US rate to its lower average value of $0.12 / kwh.  To do this: 
+This isn't very useful, though.  You might want to set the US rate to its lower average value of $0.12 / kwh. 
 
 ```javascript
 {
@@ -127,4 +126,4 @@ Now, the overrider is going to have two matches here (after the defaults): the c
 * The country+state override has a sum of 3
 * The overrider will create a new object by laying out in ascending order the values in the objects selected: defaults and both of our overrides
 
-This gets more interesting when you have a state level override without a country defined.  It will get less priority than one with __both__ country and state, but an override with country+state+county will always "lose" to a city: `2^0+2^1+2^2 < 2^3`!
+This gets more interesting as follows: an override with, e.g., country+state+county will always "lose" to a city override since `2^0+2^1+2^2 < 2^3`!
