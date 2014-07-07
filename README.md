@@ -51,7 +51,7 @@ dfg.addOverrideScheme('coffeeMachine',[ //$type = coffeeMachine
   {clientId: function() {
     return this.getUserName();
   }}
-]);
+]); //the list above is the schema for the "context" that will be provided at runtime
 ```
 
 **Usage**
@@ -66,9 +66,65 @@ var userLevel = dfg('coffeeMachine',context);
 
 ## Design
 
-* The configs are arranged into `$type`s, which are sets of key value pairs where the value can take the type of any JSON type
+* The configs are arranged into _types_ (`$type`), which are sets of key value pairs where the value can take the type of any JSON type
 * The defaults are in a single JSON object lacking the `$override` field
-* Overrides are contained in __n__ JSON objects, each with a __unique__ (for a given `$type`) `$override` field
+* Overrides are contained in _n_ JSON objects, each with a _unique_ (for a given `$type`) `$override` field
 * Overrides are not 'deep', so avoid nesting if you think you might want to override a single, nested field
 * There is a single `$override` context per `$type`
-* Override contexts are defined as a list of keys with exponential, ascending order rankings
+* Override contexts have a schema that is as a list of keys with exponential, ascending order rankings
+* At runtime, a user will request a configuration by providing the type (string) and an instance of the "context" which will be compared to overrides written to disk or a DB
+
+### Overriding
+
+Above, I mention "exponential, ascending order".  That's a mouthful!  It's pretty simple, though.  Imagine the following override context schema for electricity pricing: 
+
+0. Country
+0. State
+0. County
+0. City
+
+Now, you might have a default price globally of $0.20 / kWh.  
+
+```javascript
+{
+  $type: 'electricity',
+  $kwhRate: 0.2
+}
+```
+
+This isn't very useful, though.  You might want to set the US rate to its lower average value of $0.12 / kwh.  To do this: 
+
+```javascript
+{
+  $type: 'electricity',
+  $override: {
+    country: 'US' 
+  } //This override has one key and it's at the 0th position, so it has a "sum" of 1
+  kwhRate: 0.12
+}
+```
+
+OK, that's nice, but what about the rate for New York State?  Easy enough, right? 
+
+
+```javascript
+{
+  $type: 'electricity',
+  $override: {
+    country: 'US',
+    state: 'NY'
+  } //This override has two keys and at the 0th and 1st element, so it has a "sum" of 3
+  kwhRate: 0.19
+}
+```
+
+Now, the overrider is going to have two matches here (after the defaults): the country-wide value of $0.12 / kWh and the state-level value of $0.19.  How does it know the order to match them in?  It's only natural that $0.19 would win, but how does it do it?  Like this: 
+
+* Country is in element 0 of the context schema
+* State is in element 1 of the context schema
+* The defaults always get an override sum of 0
+* The country-only override has a sum of 1
+* The country+state override has a sum of 3
+* The overrider will create a new object by laying out in ascending order the values in the objects selected: defaults and both of our overrides
+
+This gets more interesting when you have a state level override without a country defined.  It will get less priority than one with __both__ country and state, but an override with country+state+county will always "lose" to a city: `2^0+2^1+2^2 < 2^3`!
