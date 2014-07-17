@@ -44,23 +44,26 @@ The order matters.  More on this in a bit, but suffice to say: clientId will be 
 
 ```javascript
 var dfg = require('dfg');
-dfg.addOverrideScheme('coffeeMachine',[ //@type = coffeeMachine
-  {isWeekend: function() {
+var cfg = dfg();
+cfg.addOverrideScheme('coffeeMachine', [ //@type = coffeeMachine
+  function isWeekend() { //important to use a function name. Minification risk
     return this.isWeekend();
-  }},
-  {clientId: function() {
+  },
+  function clientId() {
     return this.getUserName();
-  }}
+  }
 ]); //the list above is the schema for the "context" that will be provided at runtime
 ```
 
 **Usage**
 
 ```javascript
-var defaults = dfg('coffeeMachine');
+var dfg = require('dfg')
+var cfg = dfg(); //loads fragments from ./cfg/*.json
+var defaults = cfg('coffeeMachine');
 console.dir(defaults);
 // { @type: 'coffeeMachine', startTime: '09:45:00', numCups: 4, maxTemp: 65 }
-var userLevel = dfg('coffeeMachine',context);
+var userLevel = cfg('coffeeMachine',context);
 // { @type: 'coffeeMachine', @override: {clientId: 'ben',isWeekend:false}, startTime: '09:45:00', numCups: 4, maxTemp: 75 }
 ```
 
