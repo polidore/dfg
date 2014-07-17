@@ -1,0 +1,7 @@
+{
+  "$type": "electricity",
+  "$override": {
+    "country": "US"
+  },
+  "kwhRate": 0.20
+}
