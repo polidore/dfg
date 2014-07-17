@@ -142,4 +142,4 @@ Given the complexity of this system of overrides, it's very important to have go
 
 #### Best Practices
 
-You should cache your context search key on some unique business object and provide a `@hash` to DFG, but you should not save copies of the config value because this will prevent on the fly config changes.  For example, if you change the value for NY to @0.20 / kWh, and then DFG is told to clear its caches, the next time you ask for NY's rate, you'll get the new value.  If you cache the configset in your application, you won't know about the change.
+You should cache your context search key on some unique business object and provide a `@hash` to DFG, but you should not save copies of the config value because this will prevent on the fly config changes.  For example, if you change the value for NY to $0.20 / kWh, and then DFG is told to clear its caches, the next time you ask for NY's rate, you'll get the new value.  If you cache the configset in your application, you won't know about the change.
