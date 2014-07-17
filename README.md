@@ -84,11 +84,11 @@ Above, I mention "exponential, ascending order".  That's a mouthful!  It's prett
 
 Now, you might have a default price globally of $0.20 / kWh.  
 
-```javascript
+```json
 {
-  @type: 'electricity',
-  kwhRate: 0.2,
-  ac: true //I will not override this, but it will still be present in all contexts in the example below
+  "@type": "electricity",
+  "kwhRate": 0.2,
+  "ac": true //I will not override this, but it will still be present in all contexts in the example below
 }
 ```
 
