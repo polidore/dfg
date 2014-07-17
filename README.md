@@ -16,25 +16,25 @@ I want a config system that works like a programming language, but just for data
 
 **Base config**
 
-```javascript
+```json
 {
-  @type: 'coffeeMachine',
-  startTime: '09:45:00',
-  numCups: 4,
-  maxTemp: 65
+  "@type": "coffeeMachine",
+  "startTime": "09:45:00",
+  "numCups": 4,
+  "maxTemp": 65
 }
 ```
 
 **Override Fragment**
 
 Notice, I'm not going to override the "isWeekend" field, but I could.
-```javascript
+```json
 {
-  @type: 'coffeeMachine',
-  @override: {
-    clientId: 'ben'
-  }
-  maxTemp: 75
+  "@type": "coffeeMachine",
+  "@override": {
+    "clientId": "ben"
+  },
+  "maxTemp": 75
 }
 ```
 
@@ -88,33 +88,32 @@ Now, you might have a default price globally of $0.20 / kWh.
 {
   "@type": "electricity",
   "kwhRate": 0.2,
-  "ac": true //I will not override this, but it will still be present in all contexts in the example below
+  "ac": true
 }
 ```
+With respect to the ac value: I will not override this, but it will still be present in all contexts in the example below.
+This global average rate isn't very useful, though.  You might want to set the US rate to its lower average value of $0.12 / kwh.
 
-This isn't very useful, though.  You might want to set the US rate to its lower average value of @0.12 / kwh.
-
-```javascript
+```json
 {
-  @type: 'electricity',
-  @override: {
-    country: 'US'
-  } //This override has one key and it's at the 0th position, so it has a "sum" of 1
-  kwhRate: 0.12
+  "@type": "electricity",
+  "@override": {
+    "country": "US"
+  },
+  "kwhRate": 0.12
 }
 ```
 
 OK, that's nice, but what about the rate for New York State?  Easy enough, right?
 
-
-```javascript
+```json
 {
-  @type: 'electricity',
-  @override: {
-    country: 'US',
-    state: 'NY'
-  } //This override has two keys and at the 0th and 1st element, so it has a "sum" of 3
-  kwhRate: 0.19
+  "@type": "electricity",
+  "@override": {
+    "country": "US",
+    "state": "NY"
+  },
+  "kwhRate": 0.19
 }
 ```
 
