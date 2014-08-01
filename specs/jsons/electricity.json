@@ -1,5 +1,5 @@
 {
-  "$type": "electricity",
+  "@type": "electricity",
   "kwhRate": 0.2,
   "ac": true
 }
