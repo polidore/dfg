@@ -21,6 +21,7 @@
   },
   "homepage": "https://github.com/polidore/dfg",
   "dependencies": {
-    "q": "^1.0.1"
+    "q": "^1.0.1",
+    "benchme": "0.0.4"
   }
 }
