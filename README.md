@@ -43,9 +43,9 @@ Notice, I'm not going to override the "isWeekend" field, but I could.
 The order matters.  More on this in a bit, but suffice to say: clientId will be the "ranking" override context in this override scheme as declared.
 
 ```javascript
-var dfg = require('dfg');
-var cfg = dfg();
-cfg.addOverrideScheme('coffeeMachine', [ //@type = coffeeMachine
+var DFG = require('dfg');
+var dfg = DFG();
+dfg.createType('coffeeMachine', [ //@type = coffeeMachine
   function isWeekend() { //important to use a function name. Minification risk
     return this.isWeekend();
   },
@@ -58,12 +58,13 @@ cfg.addOverrideScheme('coffeeMachine', [ //@type = coffeeMachine
 **Usage**
 
 ```javascript
-var dfg = require('dfg')
-var cfg = dfg(); //loads fragments from ./cfg/*.json
-var defaults = cfg('coffeeMachine');
+var DFG = require('dfg')
+var dfg = DFG(); //loads fragments from ./cfg/*.json
+var coffeeCfg = dfg.typeGetter('coffeeMachine'); //partial. could also call dfg.getType each time.
+var defaults = coffeeCfg();
 console.dir(defaults);
 // { @type: 'coffeeMachine', startTime: '09:45:00', numCups: 4, maxTemp: 65 }
-var userLevel = cfg('coffeeMachine',context);
+var userLevel = coffeeCfg(context);
 // { @type: 'coffeeMachine', @override: {clientId: 'ben',isWeekend:false}, startTime: '09:45:00', numCups: 4, maxTemp: 75 }
 ```
 
