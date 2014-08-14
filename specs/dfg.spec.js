@@ -12,9 +12,10 @@ describe("DFG lets you Do it with conFiGs!", function() {
 
   it("Should have data", function() {
     expect(dfg._data).toBeTruthy();
+    expect(dfg._data.length).toBe(3);
   });
   it("Should let me create a type", function() {
-    dfg.createType("electricity"[function city() { return 'NY'}]);
-    expect(
+    dfg.createType('electricity',[function city() { return 'NY'}]);
+    expect(dfg._types['electricity']).toBeTruthy();
   });
 });
