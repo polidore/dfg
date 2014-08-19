@@ -1,7 +1,6 @@
 {
   "@type": "electricity",
   "@override": {
-    "country": "US",
     "state": "NY"
   },
   "kwhRate": 0.19,

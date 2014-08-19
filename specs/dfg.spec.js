@@ -43,17 +43,20 @@ describe("DFG lets you Do it with conFiGs!", function() {
   });
   it("Should return $0.19 when state is NY", function() {
     var cfg = dfg.getCfg('electricity', {state:'NY'});
-    console.dir(cfg);
-    expect(cfg['@secondaryCache']).toBeTruthy();
+    expect(cfg['@cacheMiss']).toBeTruthy();
     expect(cfg.kwhRate).toBe(0.19);
+    expect(cfg.ac).toBeTruthy();
+  });
+  it("Should return $0.2 when state is NJ and country is null", function() {
+    var cfg = dfg.getCfg('electricity', {state:'NJ'});
+    expect(cfg['@cacheMiss']).toBeTruthy();
+    expect(cfg.kwhRate).toBe(0.2);
     expect(cfg.ac).toBeTruthy();
   });
   it("Should return hydro 0.2 when counry is CA", function() {
     var cfg = dfg.getCfg('electricity', {country:'CA'});
     expect(cfg['@secondaryCache']).toBeTruthy();
-    console.dir(cfg);
     expect(cfg.hydro).toBe(0.2);
     expect(cfg.ac).toBeTruthy();
   });
-
 });
