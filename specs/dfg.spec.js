@@ -1,15 +1,5 @@
 var DFG = require('../');
 
-/*
-[ { '@type': 'electricity', kwhRate: 0.2, ac: true },
-  { '@type': 'electricity',
-    '@override': { country: 'US', state: 'NY' },
-    kwhRate: 0.19 },
-  { '@type': 'electricity',
-    '@override': { country: 'US' },
-    kwhRate: 0.12 } ]
-*/
-
 describe("DFG lets you Do it with conFiGs!", function() {
   var dfg;
   beforeEach(function(done) {
@@ -33,4 +23,37 @@ describe("DFG lets you Do it with conFiGs!", function() {
     expect(cfg.kwhRate).toBe(0.2);
     expect(cfg.ac).toBeTruthy();
   });
+  it("Should return $0.12 when country is US", function() {
+    var cfg = dfg.getCfg('electricity', {country:'US'});
+    expect(cfg['@cacheMiss']).toBeTruthy();
+    expect(cfg.kwhRate).toBe(0.12);
+    expect(cfg.ac).toBeTruthy();
+  });
+  it("Should return $0.12 when country is US and state is NJ", function() {
+    var cfg = dfg.getCfg('electricity', {country:'US',state:'NJ'});
+    expect(cfg['@secondaryCache']).toBeTruthy();
+    expect(cfg.kwhRate).toBe(0.12);
+    expect(cfg.ac).toBeTruthy();
+  });
+  it("Should return $0.19 when country is US and state is NY", function() {
+    var cfg = dfg.getCfg('electricity', {country:'US',state:'NY'});
+    expect(cfg['@cacheMiss']).toBeTruthy();
+    expect(cfg.kwhRate).toBe(0.19);
+    expect(cfg.ac).toBeTruthy();
+  });
+  it("Should return $0.19 when state is NY", function() {
+    var cfg = dfg.getCfg('electricity', {state:'NY'});
+    console.dir(cfg);
+    expect(cfg['@secondaryCache']).toBeTruthy();
+    expect(cfg.kwhRate).toBe(0.19);
+    expect(cfg.ac).toBeTruthy();
+  });
+  it("Should return hydro 0.2 when counry is CA", function() {
+    var cfg = dfg.getCfg('electricity', {country:'CA'});
+    expect(cfg['@secondaryCache']).toBeTruthy();
+    console.dir(cfg);
+    expect(cfg.hydro).toBe(0.2);
+    expect(cfg.ac).toBeTruthy();
+  });
+
 });

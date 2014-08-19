@@ -4,5 +4,6 @@
     "country": "US",
     "state": "NY"
   },
-  "kwhRate": 0.19
+  "kwhRate": 0.19,
+  "hydro": 0.5
 }
