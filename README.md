@@ -43,7 +43,7 @@ The order matters.  More on this in a bit, but suffice to say: city will be the 
 ```javascript
 var DFG = require('dfg');
 var dfg = DFG();
-dfg.createType('electricity', [Country, State, County, City]); //0,1,2,3  
+dfg.createType('electricity', ['country', 'state', 'county', 'city']); //0,1,2,3  
 ```
 
 **Usage**
@@ -73,7 +73,7 @@ var usCfg = dfg.getCfg('electricity',{country:"US"});
 Above, I mention "exponential, ascending order".  That's a mouthful!  It's pretty simple, though.  We're basically talking about a bitmask.  Imagine the following override context schema for electricity pricing:
 
 ```
- [Country, State, County, City] //0,1,2,3
+ ['country', 'state', 'county', 'city'] //0,1,2,3
 ```
 
 Now, you might have a default price globally of $0.20 / kWh.  
