@@ -1,16 +1,14 @@
 # Do it with conFiGs!
 
-I work with configurations a lot in applications I've built, and I find that the way most people do configurations don't fit what I'm trying to accomplish.  I have built this config system in a less formal way in a few applications, but I decided to make it a public project to benefit from a community if there is one for this type of work.
-
-I want a config system that works like a programming language, but just for data structures.  In fact, even as inheritance has lost some of its lustor in the programming community, I think it is a great way to think about configurations since we're only talking about data, not functionality.  Usually, your application has a set of default configurations that you might tune to be well balanced for most uses, but people request different values to suit their workflows.  You don't want to copy the entire configset for that user if they just want to change a single configurable variable because you would then lose the ability to change other values in a simple and productive way.  Also, you need to know the exact context for which a configuration should change.  Should it be for all uses of the application for a given user or should it be only when they access it via a particular connection?  This seems overly nuanced to many who build large scalable systems, but when you are offering your customers a high level of customer service (usually for a concentrated customer set), this precision becomes valuable.  
+A very flexible configuration system built on object oriented programming principles.
 
 ## Goals
 
 1. Allow for granular overriding of configurable values
+1. Allow configuration overrides to be minimally declared in "fragments"
 1. Allow for precise context on when a configuration "fragment" should be used
-1. Allow configuration overrides to be minimally declared
 1. Allow for natural file-based or mongodb based persistence
-  * Sure, other databases that support json are fine. I like MongoDB, so that is what I focused on
+  * I like files because they go in version control for tracking and they don't require a server to work!
 
 ## Example
 
@@ -18,41 +16,34 @@ I want a config system that works like a programming language, but just for data
 
 ```json
 {
-  "@type": "coffeeMachine",
-  "startTime": "09:45:00",
-  "numCups": 4,
-  "maxTemp": 65
+  "@type": "electricity",
+  "kwhRate": 0.2,
+  "voltage": 220
+  "ac": true
 }
 ```
 
 **Override Fragment**
 
-Notice, I'm not going to override the "isWeekend" field, but I could.
 ```json
 {
-  "@type": "coffeeMachine",
+  "@type": "electricity",
   "@override": {
-    "clientId": "ben"
+    "country": "US"
   },
-  "maxTemp": 75
+  "kwhRate": 0.12,
+  "voltage": 110
 }
 ```
 
 **Override Scheme**
 
-The order matters.  More on this in a bit, but suffice to say: clientId will be the "ranking" override context in this override scheme as declared.
+The order matters.  More on this in a bit, but suffice to say: city will be the "ranking" override context in this override scheme as declared.
 
 ```javascript
 var DFG = require('dfg');
 var dfg = DFG();
-dfg.createType('coffeeMachine', [ //@type = coffeeMachine
-  function isWeekend() { //important to use a function name. Minification risk
-    return this.isWeekend();
-  },
-  function clientId() {
-    return this.getUserName();
-  }
-]); //the list above is the schema for the "context" that will be provided at runtime
+dfg.createType('electricity', [Country, State, County, City]); //0,1,2,3  
 ```
 
 **Usage**
@@ -60,12 +51,11 @@ dfg.createType('coffeeMachine', [ //@type = coffeeMachine
 ```javascript
 var DFG = require('dfg')
 var dfg = DFG(); //loads fragments from ./cfg/*.json
-var coffeeCfg = dfg.typeGetter('coffeeMachine'); //partial. could also call dfg.getType each time.
-var defaults = coffeeCfg();
-console.dir(defaults);
-// { @type: 'coffeeMachine', startTime: '09:45:00', numCups: 4, maxTemp: 65 }
-var userLevel = coffeeCfg(context);
-// { @type: 'coffeeMachine', @override: {clientId: 'ben',isWeekend:false}, startTime: '09:45:00', numCups: 4, maxTemp: 75 }
+var cfg = dfg.getCfg('electricity');  //defaults
+console.dir(cfg);
+// {  "@type": "electricity", "kwhRate": 0.2, "voltage": 220 "ac": true }
+var usCfg = dfg.getCfg('electricity',{country:"US"});
+// {  "@type": "electricity", "kwhRate": 0.12, "voltage": 110 "ac": true }
 ```
 
 ## Design
@@ -92,7 +82,8 @@ Now, you might have a default price globally of $0.20 / kWh.
 {
   "@type": "electricity",
   "kwhRate": 0.2,
-  "ac": true
+  "ac": true,
+  "voltage": 220
 }
 ```
 With respect to the ac value: I will not override this, but it will still be present in all contexts in the example below.
