@@ -42,7 +42,7 @@ The order matters.  More on this in a bit, but suffice to say: city will be the 
 
 ```javascript
 var DFG = require('dfg');
-var dfg = DFG();
+var dfg = DFG(); //loads fragments recursively starting at ./cfg/*.json
 dfg.createType('electricity', ['country', 'state', 'county', 'city']); //0,1,2,3  
 ```
 
@@ -50,7 +50,7 @@ dfg.createType('electricity', ['country', 'state', 'county', 'city']); //0,1,2,3
 
 ```javascript
 var DFG = require('dfg')
-var dfg = DFG(); //loads fragments from ./cfg/*.json
+var dfg = DFG(); //loads fragments recursively starting at ./cfg/*.json
 var cfg = dfg.getCfg('electricity');  //defaults
 console.dir(cfg);
 // {  "@type": "electricity", "kwhRate": 0.2, "voltage": 220, "ac": true }
