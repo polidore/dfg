@@ -53,9 +53,9 @@ var DFG = require('dfg')
 var dfg = DFG(); //loads fragments from ./cfg/*.json
 var cfg = dfg.getCfg('electricity');  //defaults
 console.dir(cfg);
-// {  "@type": "electricity", "kwhRate": 0.2, "voltage": 220 "ac": true }
+// {  "@type": "electricity", "kwhRate": 0.2, "voltage": 220, "ac": true }
 var usCfg = dfg.getCfg('electricity',{country:"US"});
-// {  "@type": "electricity", "kwhRate": 0.12, "voltage": 110 "ac": true }
+// {  "@type": "electricity", "kwhRate": 0.12, "voltage": 110, "ac": true }
 ```
 
 ## Design
