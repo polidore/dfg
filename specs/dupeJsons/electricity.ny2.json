@@ -1,0 +1,8 @@
+{
+  "@type": "electricity",
+  "@override": {
+    "state": "NY"
+  },
+  "voltage": 110,
+  "kwhRate": 0.12
+}

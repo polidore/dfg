@@ -1,0 +1,7 @@
+{
+  "@type": "electricity",
+  "kwhRate": 0.2,
+  "ac": true,
+  "voltage": 220,
+  "hydro": 0.2
+}
