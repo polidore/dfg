@@ -72,7 +72,7 @@ var usCfg = dfg.getCfg('electricity',{country:"US"});
 
 Above, I mention "exponential, ascending order".  That's a mouthful!  It's pretty simple, though.  We're basically talking about a bitmask.  Imagine the following override context schema for electricity pricing:
 
-```json
+```javascript
  ['country', 'state', 'county', 'city'] //0,1,2,3
 ```
 
