@@ -18,7 +18,7 @@ A very flexible configuration system built on object oriented programming princi
 {
   "@type": "electricity",
   "kwhRate": 0.2,
-  "voltage": 220
+  "voltage": 220,
   "ac": true
 }
 ```
